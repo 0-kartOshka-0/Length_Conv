@@ -1,0 +1,102 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Добро пожаловать в конвертирование длин";
+}
+
+
+
+<div class="container">
+    <h2><span>Конвертирование длин</span></h2>
+    <ul class="menu">
+        <li class="menu-item">
+            <a href="#">Расчёт</a>
+            <ul>
+                <li><a href="#" onclick="convert('метры')">Метры</a></li>
+                <li><a href="#" onclick="convert('вершок')">Вершок</a></li>
+                <li><a href="#" onclick="convert('аршин')">Аршин</a></li>
+                <li><a href="#" onclick="convert('сажень')">Сажень</a></li>
+                <li><a href="#" onclick="convert('верста')">Верста</a></li>
+            </ul>
+        </li>
+    </ul>
+    <label for="lengthInput">Исходная длина:</label>
+    <input type="text" id="lengthInput" />
+    <span id="unitLabel"></span>
+
+    <div>
+        <button class="button" onclick="calculateFromMeters('meters')">Метры</button>
+        <button class="button" onclick="calculateFromMeters('versts')">Версты</button>
+        <button class="button" onclick="calculateFromMeters('arshins')">Аршин</button>
+        <button class="button" onclick="calculateFromMeters('sajens')">Сажень</button>
+        <button class="button" onclick="calculateFromMeters('vershoks')">Вершок</button>
+    </div>
+
+    <div>
+        <label>Длина в другом измерении:</label>
+        <input type="text" id="output" readOnly />
+    </div>
+</div>
+
+<script>
+    let selectedUnit = '';
+    let meters;
+
+    function convert(unit) {
+        const input = document.getElementById('lengthInput').value;
+
+        try {
+            document.getElementById('output').value = "";
+            meters = parseFloat(input);
+            if (isNaN(meters)) throw new Error("Некорректное значение");
+
+            selectedUnit = unit;
+            switch (unit) {
+                case 'метры':
+                    document.getElementById('unitLabel').innerText = 'метры';
+                    break;
+                case 'вершок':
+                    meters /= 44.45;
+                    document.getElementById('unitLabel').innerText = 'вершки';
+                    break;
+                case 'аршин':
+                    meters /= 0.7112;
+                    document.getElementById('unitLabel').innerText = 'аршины';
+                    break;
+                case 'сажень':
+                    meters /= 1.905;
+                    document.getElementById('unitLabel').innerText = 'сажени';
+                    break;
+                case 'верста':
+                    meters /= 0.007;
+                    document.getElementById('unitLabel').innerText = 'версты';
+                    break;
+                default:
+                    throw new Error("Неизвестная единица");
+            }
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+
+    function calculateFromMeters(unit) {
+
+        try {
+            if (isNaN(meters)) throw new Error("Некорректное значение для преобразования");
+
+            let result;
+            switch (unit) {
+                case 'meters': result = meters; break;
+                case 'versts': result = meters * 0.007; break;
+                case 'arshins': result = meters * 0.7112; break;
+                case 'sajens': result = meters * 1.905; break;
+                case 'vershoks': result = meters * 44.45; break;
+                default: throw new Error("Неизвестная единица");
+            }
+
+            document.getElementById('output').value = result.toFixed(2);
+        } catch (error) {
+            alert(error.message);
+        }
+    }
+</script>
